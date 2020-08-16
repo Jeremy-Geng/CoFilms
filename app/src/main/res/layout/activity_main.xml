@@ -4,15 +4,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@drawable/canberra"
+    android:fitsSystemWindows="false"
+    tools:context=".activities.MainActivity">
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="160dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edittext_rounded_corners_border"
+        android:ems="10"
+        android:textColor="#F4F4F4"
+        android:inputType="textPassword"
+        android:text="Username"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@id/Username"
+        app:layout_constraintHorizontal_bias="0.159"
+        app:layout_constraintStart_toStartOf="@id/Username"
+        app:layout_constraintTop_toBottomOf="@id/Username" />
+
+    <EditText
+        android:id="@+id/Username"
+        android:layout_width="158dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edittext_rounded_corners_border"
+        android:text="Username"
+        android:textColor="#F4F4F4"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.166"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:fontFamily="sans-serif-medium"
+        android:text="Welcome to CoFilms"
+        android:textColor="#F4F4F4"
+        android:textSize="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.072"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="180dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
