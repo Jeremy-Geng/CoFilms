@@ -15,7 +15,7 @@ import com.cognidius.cofilms.R;
 import java.io.File;
 import java.io.IOException;
 
-public class MediaPlayerActivity extends AppCompatActivity implements View.OnClickListener{
+public class MediaPlayerActivity extends AppCompatActivity implements View.OnClickListener {
     private SurfaceView mSurfaceView;
     private MediaPlayer mediaPlayer;
     private Button btnStartAndStop;
@@ -35,28 +35,29 @@ public class MediaPlayerActivity extends AppCompatActivity implements View.OnCli
     }
 
     //Initialize this activity
-    private void initActivity(){
+    private void initActivity() {
         mSurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
         btnStartAndStop = (Button) findViewById(R.id.buttonStartAndStop);
         btnStartAndStop.setOnClickListener(this);
-        File file = new File(getExternalCacheDir(),"CameraRecorder.mp4");
+        File file = new File(getExternalCacheDir(), "CameraRecorder.mp4");
         path = file.getAbsolutePath();
         System.out.println("视频地址：" + path.toString());
 
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
     }
 
-    private void initMediaPlayer(){
+    private void initMediaPlayer() {
         mediaPlayer = new MediaPlayer();
     }
 
-    private void setMediaPlayer(String path){
+    private void setMediaPlayer(String path) {
         try {
-            mediaPlayer.setDataSource(path);
+            String url = "https://firebasestorage.googleapis.com/v0/b/cofims.appspot.com/o/videos%2F1600058689745CameraRecorder.mp4?alt=media&token=5131ff8c-76ff-450d-9a3d-deb162fbbb70";
+            mediaPlayer.setDataSource(url);
             mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
             mediaPlayer.setLooping(true);
             System.out.println("设置路径及同步成功");
@@ -73,35 +74,35 @@ public class MediaPlayerActivity extends AppCompatActivity implements View.OnCli
 
     }
 
-    private void startPlay(){
-        if(!mediaPlayer.isPlaying() && isInitFinish){
+    private void startPlay() {
+        if (!mediaPlayer.isPlaying() && isInitFinish) {
             mediaPlayer.start();
         }
     }
 
-    private void stopPlay(){
-        if(mediaPlayer.isPlaying()){
+    private void stopPlay() {
+        if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
         }
     }
 
-    private void pausePlay(){
-        if(mediaPlayer.isPlaying()){
+    private void pausePlay() {
+        if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
         }
     }
 
-    private void seekTo(int time){
+    private void seekTo(int time) {
         mediaPlayer.seekTo(time);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.buttonStartAndStop:
-                if(mediaPlayer.isPlaying()){
+                if (mediaPlayer.isPlaying()) {
                     pausePlay();
-                }else{
+                } else {
                     System.out.println("开始播放");
                     startPlay();
                 }
@@ -112,7 +113,7 @@ public class MediaPlayerActivity extends AppCompatActivity implements View.OnCli
 
     }
 
-    public void initSurfaceviewStateListener(){
+    public void initSurfaceviewStateListener() {
         mSurfaceHolder = mSurfaceView.getHolder();
         mSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
             @Override
@@ -137,8 +138,8 @@ public class MediaPlayerActivity extends AppCompatActivity implements View.OnCli
     protected void onDestroy() {
         super.onDestroy();
 
-        if(mediaPlayer != null){
-            if(mediaPlayer.isPlaying()){
+        if (mediaPlayer != null) {
+            if (mediaPlayer.isPlaying()) {
                 mediaPlayer.stop();
             }
 

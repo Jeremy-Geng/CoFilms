@@ -1,4 +1,4 @@
- package com.cognidius.cofilms.activities;
+package com.cognidius.cofilms.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,13 +26,13 @@ import com.cognidius.cofilms.R;
 import com.cognidius.cofilms.database.UserInfo;
 import com.cognidius.cofilms.database.contract.UserInfoContract;
 
- public class MainActivity extends AppCompatActivity {
-     UserInfo userInfo;
-     TextView officialWebsite;
-     TextView signUp;
-     EditText userName;
-     EditText password;
-     ImageView logIn;
+public class MainActivity extends AppCompatActivity {
+    UserInfo userInfo;
+    TextView officialWebsite;
+    TextView signUp;
+    EditText userName;
+    EditText password;
+    ImageView logIn;
 
 
     @Override
@@ -43,10 +43,9 @@ import com.cognidius.cofilms.database.contract.UserInfoContract;
         initView();
 
 
-
     }
 
-    private void initView(){
+    private void initView() {
         logIn = findViewById(R.id.logIn);
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,12 +75,11 @@ import com.cognidius.cofilms.database.contract.UserInfoContract;
         });
 
 
-
     }
 
 
-    public void setStatusBarTransparent(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){ // 4.4
+    public void setStatusBarTransparent() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 4.4
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
 
@@ -95,23 +93,23 @@ import com.cognidius.cofilms.database.contract.UserInfoContract;
         }
     }
 
-    public void setUpDatabase(){
-        UserInfo userInfo  = new UserInfo(this);
-        SQLiteDatabase sqLiteDatabase  = userInfo.getWritableDatabase();
+    public void setUpDatabase() {
+        UserInfo userInfo = new UserInfo(this);
+        SQLiteDatabase sqLiteDatabase = userInfo.getWritableDatabase();
         userInfo.onCreate(sqLiteDatabase);
 
         ContentValues values = new ContentValues();
-        values.put(UserInfoContract.UserInfoEntry.COLUMN_NAME_USERNAME,"Shuhao Geng");
-        sqLiteDatabase.insert(UserInfoContract.UserInfoEntry.TABLE_NAME, null,values);
+        values.put(UserInfoContract.UserInfoEntry.COLUMN_NAME_USERNAME, "Shuhao Geng");
+        sqLiteDatabase.insert(UserInfoContract.UserInfoEntry.TABLE_NAME, null, values);
 
         sqLiteDatabase = userInfo.getReadableDatabase();
         String[] projection = {UserInfoContract.UserInfoEntry.COLUMN_NAME_USERNAME};
         String selection = UserInfoContract.UserInfoEntry.COLUMN_NAME_USERNAME + " = ?";
-        String [] selectionArgs = {"Shuhao Geng"};
-        Cursor cursor = sqLiteDatabase.query(UserInfoContract.UserInfoEntry.TABLE_NAME, projection, selection,selectionArgs,null,null,null);
+        String[] selectionArgs = {"Shuhao Geng"};
+        Cursor cursor = sqLiteDatabase.query(UserInfoContract.UserInfoEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
 
         String usrname = "";
-        while(cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             usrname = cursor.getString(cursor.getColumnIndexOrThrow(UserInfoContract.UserInfoEntry.COLUMN_NAME_USERNAME));
         }
 

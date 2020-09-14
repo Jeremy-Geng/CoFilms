@@ -39,6 +39,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
 
+    <ImageView
+        android:id="@+id/logIn"
+        android:layout_width="30dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/right_arrow_selector"
+        app:layout_constraintEnd_toEndOf="@+id/password"
+        app:layout_constraintStart_toStartOf="@+id/password"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
+
+
+    <TextView
+        android:id="@+id/SignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:clickable="true"
+        android:text="Sign Up"
+        android:textColor="@drawable/color_selector"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
+
+    <TextView
+        android:id="@+id/textOfficialSite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:clickable="true"
+        android:text="Cognidius"
+        android:textColor="@drawable/color_selector"
+        app:layout_constraintStart_toEndOf="@+id/SignUp"
+        app:layout_constraintTop_toTopOf="@+id/SignUp" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,8 +85,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.105" />
-
-
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -75,39 +106,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="635dp" />
-
-    <TextView
-        android:id="@+id/SignUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Sign Up"
-        android:textColor="@drawable/color_selector"
-        android:clickable="true"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toTopOf="@+id/guideline3" />
-
-    <TextView
-        android:id="@+id/textOfficialSite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="Cognidius"
-        android:textColor="@drawable/color_selector"
-        android:clickable="true"
-        app:layout_constraintStart_toEndOf="@+id/SignUp"
-        app:layout_constraintTop_toTopOf="@+id/SignUp" />
-
-    <ImageView
-        android:id="@+id/logIn"
-        android:layout_width="30dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/right_arrow_selector"
-        app:layout_constraintEnd_toEndOf="@+id/password"
-        app:layout_constraintStart_toStartOf="@+id/password"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

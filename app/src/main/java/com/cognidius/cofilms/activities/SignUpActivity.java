@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 public class SignUpActivity extends AppCompatActivity {
     ImageView backToLogIn;
-    EditText userName, password,retypePassword;
+    EditText userName, password, retypePassword;
 
     // p stands for pre, waiting to be checked
     String userNameP, passwordP, retypePasswordP;
@@ -34,7 +34,7 @@ public class SignUpActivity extends AppCompatActivity {
         initAcitivty();
     }
 
-    private void initAcitivty(){
+    private void initAcitivty() {
         userName = findViewById(R.id.editTextUserName);
         password = findViewById(R.id.editTextPassword);
         retypePassword = findViewById(R.id.editTextRetype);
@@ -47,21 +47,22 @@ public class SignUpActivity extends AppCompatActivity {
                 retypePasswordP = retypePassword.getText().toString();
 
                 String patternSpace = ".*\\s+.*";
-                String patternSC = ".*[`~!@#_$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）— +|{}【】‘；：”“’。，、？].*";;
-                if(userNameP.equals("")){
-                    Toast.makeText(SignUpActivity.this,"Please Input Your User Name",Toast.LENGTH_SHORT).show();
-                }else if(Pattern.matches(patternSpace, userNameP) || Pattern.matches(patternSC, userNameP)){
-                    Toast.makeText(SignUpActivity.this,"User name can only include characters and numbers",Toast.LENGTH_SHORT).show();
-                }else if(passwordP.equals("") || retypePasswordP.equals("")){
-                    Toast.makeText(SignUpActivity.this,"Please Input Your Password",Toast.LENGTH_SHORT).show();
-                }else if(!passwordP.equals(retypePasswordP)){
-                    Toast.makeText(SignUpActivity.this,"Password Inconsistent",Toast.LENGTH_SHORT).show();
-                }else if( userNameP.length() > 16 || userName.length() < 4){
-                    Toast.makeText(SignUpActivity.this,"User name must include 4-16 characters",Toast.LENGTH_SHORT).show();
-                } else if(passwordP.length() > 16 || passwordP.length() < 4){
-                    Toast.makeText(SignUpActivity.this,"Password must include 4-16 characters",Toast.LENGTH_SHORT).show();
-                } else{
-                    Toast.makeText(SignUpActivity.this,"Sign Up Successfully",Toast.LENGTH_SHORT).show();
+                String patternSC = ".*[`~!@#_$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）— +|{}【】‘；：”“’。，、？].*";
+                ;
+                if (userNameP.equals("")) {
+                    Toast.makeText(SignUpActivity.this, "Please Input Your User Name", Toast.LENGTH_SHORT).show();
+                } else if (Pattern.matches(patternSpace, userNameP) || Pattern.matches(patternSC, userNameP)) {
+                    Toast.makeText(SignUpActivity.this, "User name can only include characters and numbers", Toast.LENGTH_SHORT).show();
+                } else if (passwordP.equals("") || retypePasswordP.equals("")) {
+                    Toast.makeText(SignUpActivity.this, "Please Input Your Password", Toast.LENGTH_SHORT).show();
+                } else if (!passwordP.equals(retypePasswordP)) {
+                    Toast.makeText(SignUpActivity.this, "Password Inconsistent", Toast.LENGTH_SHORT).show();
+                } else if (userNameP.length() > 16 || userName.length() < 4) {
+                    Toast.makeText(SignUpActivity.this, "User name must include 4-16 characters", Toast.LENGTH_SHORT).show();
+                } else if (passwordP.length() > 16 || passwordP.length() < 4) {
+                    Toast.makeText(SignUpActivity.this, "Password must include 4-16 characters", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SignUpActivity.this, "Sign Up Successfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
@@ -69,8 +70,8 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    public void setStatusBarTransparent(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){ // 4.4
+    public void setStatusBarTransparent() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 4.4
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
 
