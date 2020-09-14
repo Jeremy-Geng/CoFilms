@@ -15,10 +15,10 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/edittext_rounded_corners_border"
         android:ems="10"
-        android:textColor="#F4F4F4"
         android:inputType="textPassword"
         android:text="Username"
         android:textAlignment="center"
+        android:textColor="#F3EFEF"
         app:layout_constraintEnd_toEndOf="@id/Username"
         app:layout_constraintHorizontal_bias="0.159"
         app:layout_constraintStart_toStartOf="@id/Username"
@@ -30,9 +30,10 @@
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/edittext_rounded_corners_border"
+        android:inputType=""
         android:text="Username"
-        android:textColor="#F4F4F4"
         android:textAlignment="center"
+        android:textColor="#F4F4F4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.166"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,11 +47,13 @@
         android:textColor="#F4F4F4"
         android:textSize="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.072"
+        app:layout_constraintHorizontal_bias="0.084"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintVertical_bias="0.105" />
+
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -58,6 +61,53 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="180dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="42dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="635dp" />
+
+    <TextView
+        android:id="@+id/SignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Sign Up"
+        android:textColor="@drawable/color_selector"
+        android:clickable="true"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
+
+    <TextView
+        android:id="@+id/textOfficialSite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="Cognidius"
+        android:textColor="@drawable/color_selector"
+        android:clickable="true"
+        app:layout_constraintStart_toEndOf="@+id/SignUp"
+        app:layout_constraintTop_toTopOf="@+id/SignUp" />
+
+    <ImageView
+        android:id="@+id/logIn"
+        android:layout_width="30dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/right_arrow_selector"
+        app:layout_constraintEnd_toEndOf="@+id/password"
+        app:layout_constraintStart_toStartOf="@+id/password"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

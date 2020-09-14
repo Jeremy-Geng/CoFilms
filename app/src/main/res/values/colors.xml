@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="colorLoginBackGround">#A9A9A9</color>
+    <color name="normal">#F4F4F4</color>
+    <color name="press">#7A7373</color>
 </resources>

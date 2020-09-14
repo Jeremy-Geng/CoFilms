@@ -9,6 +9,11 @@
         android:roundIcon="@mipmap/ic_cognidius_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.SignUpActivity"></activity>
+        <activity android:name=".activities.MediaPlayerActivity" />
+        <activity
+            android:name=".activities.PublicDomain"
+            android:hardwareAccelerated="true" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,5 +22,11 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>
