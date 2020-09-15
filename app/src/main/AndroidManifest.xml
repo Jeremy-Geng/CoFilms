@@ -9,7 +9,10 @@
         android:roundIcon="@mipmap/ic_cognidius_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.SignUpActivity"></activity>
+        <activity android:name=".activities.SwitchActivity"></activity>
+        <activity android:name=".activities.PublicAreaActivity" />
+        <activity android:name=".activities.UserMenuActivity" />
+        <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.MediaPlayerActivity" />
         <activity
             android:name=".activities.PublicDomain"
@@ -22,11 +25,14 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>

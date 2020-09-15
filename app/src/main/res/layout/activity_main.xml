@@ -9,14 +9,16 @@
     tools:context=".activities.MainActivity">
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/Password"
         android:layout_width="160dp"
         android:layout_height="39dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/edittext_rounded_corners_border"
         android:ems="10"
         android:inputType="textPassword"
-        android:text="Username"
+        android:text=""
+        android:hint="password"
+        android:textStyle="italic"
         android:textAlignment="center"
         android:textColor="#F3EFEF"
         app:layout_constraintEnd_toEndOf="@id/Username"
@@ -30,8 +32,10 @@
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/edittext_rounded_corners_border"
-        android:inputType=""
-        android:text="Username"
+        android:hint="user name"
+        android:textStyle="italic"
+        android:inputType="text"
+        android:text=""
         android:textAlignment="center"
         android:textColor="#F4F4F4"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,9 +49,9 @@
         android:layout_height="35dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/right_arrow_selector"
-        app:layout_constraintEnd_toEndOf="@+id/password"
-        app:layout_constraintStart_toStartOf="@+id/password"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintEnd_toEndOf="@+id/Password"
+        app:layout_constraintStart_toStartOf="@+id/Password"
+        app:layout_constraintTop_toBottomOf="@+id/Password" />
 
 
     <TextView

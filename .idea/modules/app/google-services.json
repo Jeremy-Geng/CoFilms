@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "772330608422",
+    "firebase_url": "https://cofilms-78827.firebaseio.com",
+    "project_id": "cofilms-78827",
+    "storage_bucket": "cofilms-78827.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772330608422:android:eeed228c3a7cab12ead3e7",
+        "android_client_info": {
+          "package_name": "com.cognidius.cofilms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "772330608422-pjs4c3v5g02a34pbhn8356buigrba2b7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cognidius.cofilms",
+            "certificate_hash": "f6c1dc27c5aa1721580d73e5bb38fdb85d62af0e"
+          }
+        },
+        {
+          "client_id": "772330608422-5mkfdmubjvbm7l17usnr410f0uetohgr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjG-hwjZrGIdftr_U6PJY41H8pC8bg5ng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "772330608422-5mkfdmubjvbm7l17usnr410f0uetohgr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

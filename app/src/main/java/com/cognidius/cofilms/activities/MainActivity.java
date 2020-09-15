@@ -10,24 +10,21 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.InputType;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.cognidius.cofilms.R;
+import com.cognidius.cofilms.database.Azure.AzureConnection;
 import com.cognidius.cofilms.database.UserInfo;
 import com.cognidius.cofilms.database.contract.UserInfoContract;
 
 public class MainActivity extends AppCompatActivity {
-    UserInfo userInfo;
     TextView officialWebsite;
     TextView signUp;
     EditText userName;
@@ -40,18 +37,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setStatusBarTransparent();
         setContentView(R.layout.activity_main);
+        AzureConnection.connect();
+        AzureConnection.getUsernameList();
         initView();
-
-
     }
 
     private void initView() {
         logIn = findViewById(R.id.logIn);
+        userName = findViewById(R.id.Username);
+        password = findViewById(R.id.Password);
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, PublicDomain.class);
-                startActivity(intent);
+                String userNameP = userName.getText().toString();
+                String passwordP = password.getText().toString();
+
+                if(!AzureConnection.usernameList.contains(userNameP)){
+                    Toast.makeText(MainActivity.this,"Invalid Username!", Toast.LENGTH_SHORT).show();
+                }else if(!AzureConnection.checkPassWord(userNameP,passwordP)){
+                    Toast.makeText(MainActivity.this,"Incorrect Password!", Toast.LENGTH_SHORT).show();
+                }else{
+                    Intent intent = new Intent(MainActivity.this, PublicDomain.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -73,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
     }
 

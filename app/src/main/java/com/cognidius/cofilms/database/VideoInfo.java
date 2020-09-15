@@ -11,7 +11,6 @@ public class VideoInfo extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "VideoInfo.db";
 
-
     public VideoInfo(Context context){
         super(context, DATABASE_NAME,null, DATABASE_VERSION);
     }
