@@ -1,4 +1,4 @@
-package com.cognidius.cofilms.activities;
+package com.cognidius.cofilms.activities.external;
 
 import androidx.appcompat.app.AppCompatActivity;
 

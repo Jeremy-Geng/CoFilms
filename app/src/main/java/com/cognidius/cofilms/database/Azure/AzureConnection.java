@@ -31,7 +31,7 @@ public class AzureConnection {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
-            System.out.println(" erroe code" + e.getErrorCode());
+            System.out.println(" erroe code: " + e.getErrorCode());
             System.err.println("Connection Failed");
         }
     }

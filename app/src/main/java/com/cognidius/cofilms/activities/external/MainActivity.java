@@ -1,4 +1,4 @@
-package com.cognidius.cofilms.activities;
+package com.cognidius.cofilms.activities.external;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,7 +20,10 @@ import android.widget.Toast;
 
 
 import com.cognidius.cofilms.R;
+import com.cognidius.cofilms.activities.internal.UserMenuActivity;
+import com.cognidius.cofilms.activities.player.MediaPlayerActivity;
 import com.cognidius.cofilms.database.Azure.AzureConnection;
+import com.cognidius.cofilms.database.LoggedUser;
 import com.cognidius.cofilms.database.UserInfo;
 import com.cognidius.cofilms.database.contract.UserInfoContract;
 
@@ -57,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
                 }else if(!AzureConnection.checkPassWord(userNameP,passwordP)){
                     Toast.makeText(MainActivity.this,"Incorrect Password!", Toast.LENGTH_SHORT).show();
                 }else{
-                    Intent intent = new Intent(MainActivity.this, PublicDomain.class);
+                    LoggedUser.setUSERNAME(userNameP);
+                    LoggedUser.setPASSWORD(passwordP);
+                    Intent intent = new Intent(MainActivity.this, UserMenuActivity.class);
                     startActivity(intent);
                 }
             }

@@ -4,23 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MediaPlayerActivity">
+    tools:context=".activities.player.MediaPlayerActivity">
 
-    <Button
-        android:id="@+id/buttonStartAndStop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start_Stop"
-        app:layout_constraintBottom_toBottomOf="@+id/surfaceView"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <SurfaceView
         android:id="@+id/surfaceView"
-        android:layout_width="411dp"
-        android:layout_height="225dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:keepScreenOn="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabControl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:alpha="0.4"
+        android:clickable="true"
+        app:backgroundTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@+id/surfaceView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:rippleColor="@color/press"
+        app:srcCompat="@drawable/ic_player" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:outlineSpotShadowColor="@color/press"
+        app:layout_constraintTop_toTopOf="@+id/surfaceView"
+        android:visibility="visible"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

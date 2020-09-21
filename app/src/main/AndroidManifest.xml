@@ -9,15 +9,16 @@
         android:roundIcon="@mipmap/ic_cognidius_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.SwitchActivity"></activity>
-        <activity android:name=".activities.PublicAreaActivity" />
-        <activity android:name=".activities.UserMenuActivity" />
-        <activity android:name=".activities.SignUpActivity" />
-        <activity android:name=".activities.MediaPlayerActivity" />
+        <activity android:name=".activities.internal.SwitchActivity"></activity>
+        <activity android:name=".activities.internal.PublicAreaActivity" />
+        <activity android:name=".activities.internal.UserMenuActivity" />
+        <activity android:name=".activities.external.SignUpActivity" />
+        <activity android:name=".activities.player.MediaPlayerActivity" />
         <activity
-            android:name=".activities.PublicDomain"
-            android:hardwareAccelerated="true" />
-        <activity android:name=".activities.MainActivity">
+            android:name=".activities.player.CustomCamera"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.external.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,6 +26,7 @@
             </intent-filter>
         </activity>
     </application>
+
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -32,7 +34,6 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 </manifest>

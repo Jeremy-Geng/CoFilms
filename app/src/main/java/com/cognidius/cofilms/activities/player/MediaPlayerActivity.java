@@ -1,16 +1,22 @@
-package com.cognidius.cofilms.activities;
+package com.cognidius.cofilms.activities.player;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.cognidius.cofilms.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,10 +24,11 @@ import java.io.IOException;
 public class MediaPlayerActivity extends AppCompatActivity implements View.OnClickListener {
     private SurfaceView mSurfaceView;
     private MediaPlayer mediaPlayer;
-    private Button btnStartAndStop;
+    private FloatingActionButton btnStartAndStop;
     private String path;
     private boolean isInitFinish = false;
     private SurfaceHolder mSurfaceHolder;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +43,9 @@ public class MediaPlayerActivity extends AppCompatActivity implements View.OnCli
 
     //Initialize this activity
     private void initActivity() {
-        mSurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
-        btnStartAndStop = (Button) findViewById(R.id.buttonStartAndStop);
+        mSurfaceView = findViewById(R.id.surfaceView);
+        btnStartAndStop = findViewById(R.id.fabControl);
+        progressBar = findViewById(R.id.progressBar);
         btnStartAndStop.setOnClickListener(this);
         File file = new File(getExternalCacheDir(), "CameraRecorder.mp4");
         path = file.getAbsolutePath();
@@ -54,20 +62,37 @@ public class MediaPlayerActivity extends AppCompatActivity implements View.OnCli
         mediaPlayer = new MediaPlayer();
     }
 
-    private void setMediaPlayer(String path) {
+    private void setMediaPlayer(String path)  {
         try {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            final Uri videoUri = null;
+            storageRef.child("videos/1600058580498CameraRecorder.mp4").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+
+                @Override
+                public void onSuccess(Uri uri){
+                        System.out.println(uri.toString());
+
+
+                }
+            });
+
             String url = "https://firebasestorage.googleapis.com/v0/b/cofims.appspot.com/o/videos%2F1600058689745CameraRecorder.mp4?alt=media&token=5131ff8c-76ff-450d-9a3d-deb162fbbb70";
             mediaPlayer.setDataSource(url);
             mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
             mediaPlayer.setLooping(true);
             System.out.println("设置路径及同步成功");
             mediaPlayer.prepareAsync();
+
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     isInitFinish = true;
+                    progressBar.setVisibility(ProgressBar.INVISIBLE);
+                    startPlay();
                 }
             });
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,12 +102,6 @@ public class MediaPlayerActivity extends AppCompatActivity implements View.OnCli
     private void startPlay() {
         if (!mediaPlayer.isPlaying() && isInitFinish) {
             mediaPlayer.start();
-        }
-    }
-
-    private void stopPlay() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
         }
     }
 
@@ -98,17 +117,10 @@ public class MediaPlayerActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.buttonStartAndStop:
-                if (mediaPlayer.isPlaying()) {
-                    pausePlay();
-                } else {
-                    System.out.println("开始播放");
-                    startPlay();
-                }
-                break;
-            default:
-                break;
+        if(mediaPlayer.isPlaying()){
+            pausePlay();
+        }else{
+            startPlay();
         }
 
     }

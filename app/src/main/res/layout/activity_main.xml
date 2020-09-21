@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/canberra"
     android:fitsSystemWindows="false"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.external.MainActivity">
 
     <EditText
         android:id="@+id/Password"
