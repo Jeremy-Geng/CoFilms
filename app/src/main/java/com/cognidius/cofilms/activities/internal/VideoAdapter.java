@@ -12,22 +12,21 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.cognidius.cofilms.R;
 import com.cognidius.cofilms.activities.player.MediaPlayerActivity;
-import com.cognidius.cofilms.database.Video;
+import com.cognidius.cofilms.database.room.Video;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
-    private ArrayList<Video> videoList;
+    private List<Video> videoList;
     private Context context;
 
     public VideoAdapter(Context context) {
         this.context = context;
     }
 
-    public void setVideoList(ArrayList<Video> videos){
+    public void setVideoList(List<Video> videos){
         videoList = videos;
         notifyDataSetChanged();
     }
@@ -35,26 +34,27 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     @NonNull
     @Override
     public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_video_list_for_user,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_video_list_for_user, parent,false);
         VideoViewHolder holder = new VideoViewHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull VideoViewHolder holder, final int position) {
         holder.videoTitle.setText(videoList.get(position).getVideoTitle());
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MediaPlayerActivity.setCurrentVideo(videoList.get(position));
                 Intent intent = new Intent(context, MediaPlayerActivity.class);
                 context.startActivity(intent);
             }
         });
 
-        Glide.with(context)
-                .asBitmap()
-                .load(videoList.get(position).getThumbnailurl())
-                .into(holder.videoThumbnail);
+//        Glide.with(context)
+//                .asBitmap()
+//                .load(videoList.get(position).getThumbnailurl())
+//                .into(holder.videoThumbnail);
 
     }
 
@@ -77,4 +77,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
         }
     }
+
+
 }

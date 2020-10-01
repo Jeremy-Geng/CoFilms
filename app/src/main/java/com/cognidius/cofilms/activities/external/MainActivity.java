@@ -1,5 +1,6 @@
 package com.cognidius.cofilms.activities.external;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
@@ -22,10 +23,18 @@ import android.widget.Toast;
 import com.cognidius.cofilms.R;
 import com.cognidius.cofilms.activities.internal.UserMenuActivity;
 import com.cognidius.cofilms.activities.player.MediaPlayerActivity;
+import com.cognidius.cofilms.auxiliary.CommunitySelection;
 import com.cognidius.cofilms.database.Azure.AzureConnection;
 import com.cognidius.cofilms.database.LoggedUser;
 import com.cognidius.cofilms.database.UserInfo;
 import com.cognidius.cofilms.database.contract.UserInfoContract;
+import com.cognidius.cofilms.database.room.InitialDataBase;
+import com.cognidius.cofilms.database.room.User;
+import com.cognidius.cofilms.database.room.dao.UserDao;
+
+
+import java.sql.SQLOutput;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     TextView officialWebsite;
@@ -33,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     EditText userName;
     EditText password;
     ImageView logIn;
+    UserDao userDao;
+    List<User> users;
 
 
     @Override
@@ -40,10 +51,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setStatusBarTransparent();
         setContentView(R.layout.activity_main);
-        AzureConnection.connect();
-        AzureConnection.getUsernameList();
+        //AzureConnection.connect();
+       // AzureConnection.getUsernameList();
         initView();
     }
+
 
     private void initView() {
         logIn = findViewById(R.id.logIn);
@@ -55,14 +67,14 @@ public class MainActivity extends AppCompatActivity {
                 String userNameP = userName.getText().toString();
                 String passwordP = password.getText().toString();
 
-                if(!AzureConnection.usernameList.contains(userNameP)){
+                if(!isUserExisting(userNameP)){
                     Toast.makeText(MainActivity.this,"Invalid Username!", Toast.LENGTH_SHORT).show();
-                }else if(!AzureConnection.checkPassWord(userNameP,passwordP)){
+                }else if(!checkPassWord(userNameP,passwordP)){
                     Toast.makeText(MainActivity.this,"Incorrect Password!", Toast.LENGTH_SHORT).show();
                 }else{
                     LoggedUser.setUSERNAME(userNameP);
                     LoggedUser.setPASSWORD(passwordP);
-                    Intent intent = new Intent(MainActivity.this, UserMenuActivity.class);
+                    Intent intent = new Intent(MainActivity.this, CommunityActivity.class);
                     startActivity(intent);
                 }
             }
@@ -87,6 +99,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        userDao = InitialDataBase.initialUserTable(this);
+        users = userDao.loadAllUsers();
+
+    }
+
+    private boolean isUserExisting(String inputUserName){
+        boolean rst = false;
+        for (User user : users) {
+            if(user.getUserName().equals(inputUserName)){
+                rst = true;
+                break;
+            }
+        }
+        return rst;
+    }
+
+    private boolean checkPassWord(String inputUserName, String inputPassword){
+        boolean rst = false;
+        for (User user : users) {
+            if(user.getUserName().equals(inputUserName)){
+                if(user.getPassWord().equals(inputPassword)){
+                    rst = true;
+                    break;
+                }
+            }
+        }
+        return rst;
     }
 
 

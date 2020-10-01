@@ -1,16 +1,18 @@
-package com.cognidius.cofilms.database;
+package com.cognidius.cofilms.database.room;
 
 public class Video {
     private String videoId;
-    private String videoTitle;
+    private String videoTitle = "defaultVideoTitle";
     private String videoType;
     private String belongTo;
     private String description;
     private String thumbnailUrl;
 
-    public Video(String videoId, String videoTitle, String videoType) {
+    public Video() {
+    }
+
+    public Video(String videoId, String videoType) {
         this.videoId = videoId;
-        this.videoTitle = videoTitle;
         this.videoType = videoType;
     }
 

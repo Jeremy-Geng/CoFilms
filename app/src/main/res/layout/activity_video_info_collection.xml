@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.player.VideoInfoCollectionActivity">
+
+    <Button
+        android:id="@+id/btnConfirm"
+        android:layout_width="69dp"
+        android:layout_height="32dp"
+        android:layout_below="@id/videoType"
+        android:layout_alignLeft="@id/videoType"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="0dp"
+        android:text="Confirm"
+        android:textSize="8dp" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="69dp"
+        android:layout_height="32dp"
+        android:layout_below="@id/videoType"
+        android:layout_toEndOf="@id/btnConfirm"
+        android:layout_marginLeft="20dp"
+        android:text="Cancel"
+        android:textSize="8dp" />
+
+    <EditText
+        android:id="@+id/videoTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
+        android:hint="Please enter video title" />
+
+    <RadioGroup
+        android:id="@+id/videoType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/videoTitle"
+        android:layout_alignLeft="@id/videoTitle">
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/rbQuestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Question"
+            android:checked="true"/>
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/rbAnswer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Answer" />
+
+    </RadioGroup>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"/>
+
+
+</RelativeLayout>

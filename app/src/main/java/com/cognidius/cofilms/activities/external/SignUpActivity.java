@@ -14,20 +14,20 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.cognidius.cofilms.R;
-import com.cognidius.cofilms.database.Azure.AzureConnection;
+import com.cognidius.cofilms.database.room.InitialDataBase;
+import com.cognidius.cofilms.database.room.User;
+import com.cognidius.cofilms.database.room.dao.UserDao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class SignUpActivity extends AppCompatActivity {
-    ImageView backToLogIn;
-    EditText userName, password, retypePassword;
+    private ImageView backToLogIn;
+    private EditText userName, password, retypePassword;
 
     // p stands for pre, waiting to be checked
-    String userNameP, passwordP, retypePasswordP;
+    private String userNameP, passwordP, retypePasswordP;
+    private UserDao userDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +51,10 @@ public class SignUpActivity extends AppCompatActivity {
                 isValidUserInfo();
             }
         });
+
+        userDao = InitialDataBase.initialUserTable(this);
+
+
     }
 
     public void isValidUserInfo() {
@@ -69,35 +73,55 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(SignUpActivity.this, "User name must include 4-16 characters!", Toast.LENGTH_SHORT).show();
         } else if (passwordP.length() > 16 || passwordP.length() < 4) {
             Toast.makeText(SignUpActivity.this, "Password must include 4-16 characters!", Toast.LENGTH_SHORT).show();
-        } else if (AzureConnection.usernameList.contains(userNameP)) {
+        } else if (userNameOccupied(userNameP)) {
             Toast.makeText(SignUpActivity.this, "Username Occupied!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(SignUpActivity.this, "Sign Up Successfully", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-            uploadInfoToServer();
+            User newUser = new User(userNameP, passwordP);
+            insertUser(newUser);
+           // uploadInfoToServer();
             startActivity(intent);
+
         }
 
     }
 
-
-    public void uploadInfoToServer() {
-        PreparedStatement prepSt = AzureConnection.insert("Userinfo");
-        try {
-            prepSt.setString(1, userNameP);
-            prepSt.setString(2, passwordP);
-            prepSt.setNull(3, Types.VARCHAR);
-            prepSt.setNull(4, Types.VARCHAR);
-            prepSt.setNull(5, Types.VARCHAR);
-            prepSt.setNull(6, Types.VARCHAR);
-            prepSt.setNull(7, Types.DATE);
-            ResultSet rs = prepSt.executeQuery();
-            System.out.println("Insert data successfully");
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private boolean userNameOccupied(String userNameP) {
+        boolean rst = false;
+        List<User> users = userDao.loadAllUsers();
+        for (User user : users) {
+            if(user.getUserName().equals(userNameP)){
+                rst = true;
+                break;
+            }
         }
-
+        return rst;
     }
+
+
+    private void insertUser(User user){
+        userDao.insertAll(user);
+    }
+
+
+//    public void uploadInfoToServer() {
+//        PreparedStatement prepSt = AzureConnection.insert("Userinfo");
+//        try {
+//            prepSt.setString(1, userNameP);
+//            prepSt.setString(2, passwordP);
+//            prepSt.setNull(3, Types.VARCHAR);
+//            prepSt.setNull(4, Types.VARCHAR);
+//            prepSt.setNull(5, Types.VARCHAR);
+//            prepSt.setNull(6, Types.VARCHAR);
+//            prepSt.setNull(7, Types.DATE);
+//            ResultSet rs = prepSt.executeQuery();
+//            System.out.println("Insert data successfully");
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     public void setStatusBarTransparent() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 4.4

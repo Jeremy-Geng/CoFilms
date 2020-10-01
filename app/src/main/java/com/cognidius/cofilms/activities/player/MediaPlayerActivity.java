@@ -2,21 +2,20 @@ package com.cognidius.cofilms.activities.player;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
-import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.cognidius.cofilms.R;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.cognidius.cofilms.activities.internal.UserMenuActivity;
+import com.cognidius.cofilms.database.room.Video;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +28,9 @@ public class MediaPlayerActivity extends AppCompatActivity implements View.OnCli
     private boolean isInitFinish = false;
     private SurfaceHolder mSurfaceHolder;
     private ProgressBar progressBar;
+    private static Video currentVideo;
+    private String url;
+    private ImageView backToUserMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +43,23 @@ public class MediaPlayerActivity extends AppCompatActivity implements View.OnCli
 
     }
 
+    public static void setCurrentVideo(Video currentVideo) {
+        MediaPlayerActivity.currentVideo = currentVideo;
+    }
+
     //Initialize this activity
     private void initActivity() {
         mSurfaceView = findViewById(R.id.surfaceView);
         btnStartAndStop = findViewById(R.id.fabControl);
         progressBar = findViewById(R.id.progressBar);
+        backToUserMenu = findViewById(R.id.backToUserMenuforPlayer);
+        backToUserMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MediaPlayerActivity.this, UserMenuActivity.class);
+                startActivity(intent);
+            }
+        });
         btnStartAndStop.setOnClickListener(this);
         File file = new File(getExternalCacheDir(), "CameraRecorder.mp4");
         path = file.getAbsolutePath();
@@ -64,21 +78,19 @@ public class MediaPlayerActivity extends AppCompatActivity implements View.OnCli
 
     private void setMediaPlayer(String path)  {
         try {
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference();
-            final Uri videoUri = null;
-            storageRef.child("videos/1600058580498CameraRecorder.mp4").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            FirebaseStorage storage = FirebaseStorage.getInstance();
+//            StorageReference storageRef = storage.getReference();
+//            String serverPath = "videos/"+ currentVideo.getVideoId() + ".mp4";
+//
+//            storageRef.child(serverPath).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                @Override
+//                public void onSuccess(Uri uri){
+//                    url = uri.toString();
+//                    System.out.println("Setting successfully: " + url);
+//                }
+//            });
 
-                @Override
-                public void onSuccess(Uri uri){
-                        System.out.println(uri.toString());
-
-
-                }
-            });
-
-            String url = "https://firebasestorage.googleapis.com/v0/b/cofims.appspot.com/o/videos%2F1600058689745CameraRecorder.mp4?alt=media&token=5131ff8c-76ff-450d-9a3d-deb162fbbb70";
-            mediaPlayer.setDataSource(url);
+            mediaPlayer.setDataSource("https://firebasestorage.googleapis.com/v0/b/cofims.appspot.com/o/videos%2F1600843386183.mp4?alt=media&token=829fd2fb-a3d9-4cb9-9f7d-1613659b286c");
             mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
             mediaPlayer.setLooping(true);
             System.out.println("设置路径及同步成功");

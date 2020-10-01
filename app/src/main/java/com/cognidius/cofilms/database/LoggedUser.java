@@ -1,5 +1,8 @@
 package com.cognidius.cofilms.database;
 
+
+import androidx.room.Entity;
+
 public class LoggedUser {
     private static String USERNAME;
     private static String PASSWORD;
@@ -8,6 +11,9 @@ public class LoggedUser {
     private static String GENDER;
     private static String ORGANIZATION;
     private static String BIRTHOFDATE;
+
+    public LoggedUser() {
+    }
 
     public static String getUSERNAME() {
         return USERNAME;

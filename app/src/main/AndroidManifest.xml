@@ -9,15 +9,19 @@
         android:roundIcon="@mipmap/ic_cognidius_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.internal.SwitchActivity"></activity>
+        <activity android:name=".activities.external.CommunityActivity"></activity>
+        <activity android:name=".activities.player.VideoInfoCollectionActivity" />
+        <activity android:name=".activities.internal.SwitchActivity" />
         <activity android:name=".activities.internal.PublicAreaActivity" />
         <activity android:name=".activities.internal.UserMenuActivity" />
         <activity android:name=".activities.external.SignUpActivity" />
-        <activity android:name=".activities.player.MediaPlayerActivity" />
         <activity
-            android:name=".activities.player.CustomCamera"
+            android:name=".activities.player.MediaPlayerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.player.CustomCameraActivity"
             android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity android:name=".activities.external.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,14 +30,14 @@
             </intent-filter>
         </activity>
     </application>
-
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

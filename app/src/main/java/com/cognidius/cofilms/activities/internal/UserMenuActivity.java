@@ -10,22 +10,17 @@ import android.view.View;
 import android.widget.Button;
 
 import com.cognidius.cofilms.R;
-import com.cognidius.cofilms.activities.player.CustomCamera;
-import com.cognidius.cofilms.database.Video;
+import com.cognidius.cofilms.activities.player.CustomCameraActivity;
+import com.cognidius.cofilms.database.room.Video;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 public class UserMenuActivity extends AppCompatActivity {
-    private static String username;
     private Button gotoPublic;
     private RecyclerView videoList;
     private FloatingActionButton fabAddVideo;
 
-
-    public static void setUsername(String username) {
-        UserMenuActivity.username = username;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,28 +43,26 @@ public class UserMenuActivity extends AppCompatActivity {
         fabAddVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(UserMenuActivity.this, CustomCamera.class);
+                Intent intent = new Intent(UserMenuActivity.this, CustomCameraActivity.class);
                 startActivity(intent);
             }
         });
 
-        ArrayList<Video> videos = new ArrayList<>();
-        videos.add(new Video("1","Question1","Question"));
-        videos.add(new Video("2","Answer1","Answer"));
-
         videoList = findViewById(R.id.videosRecView);
         VideoAdapter adapter = new VideoAdapter(this);
+        ArrayList<Video> videos = new ArrayList<>();
+        Video videoOne = new Video();
+        videoOne.setVideoTitle("TestingOne");
+        videos.add(videoOne);
+        Video videoTwo = new Video();
+        videoTwo.setVideoTitle("TestingTwo");
+        videos.add(videoTwo);
         adapter.setVideoList(videos);
         videoList.setAdapter(adapter);
         videoList.setLayoutManager(new GridLayoutManager(this,2));
-
-
-
     }
 
-    private void getVideos(){
 
-    }
 
 
 }

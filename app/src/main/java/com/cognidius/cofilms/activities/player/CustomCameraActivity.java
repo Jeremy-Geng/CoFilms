@@ -1,6 +1,5 @@
 package com.cognidius.cofilms.activities.player;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,22 +19,18 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.cognidius.cofilms.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.cognidius.cofilms.activities.internal.UserMenuActivity;
+import com.cognidius.cofilms.database.room.Video;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
-public class CustomCamera extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = CustomCamera.class.getSimpleName();
+public class CustomCameraActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = CustomCameraActivity.class.getSimpleName();
     private MediaRecorder mMediaRecorder;
     private TextureView mTextureView;
     private Button bStart, bStop;
@@ -46,6 +40,8 @@ public class CustomCamera extends AppCompatActivity implements View.OnClickListe
     private File videoFile;
     private ImageView cameraSwitch;
     private boolean faceCamera = false;
+    private ImageView backtoUserMenu;
+    private Video currentVideo;
 
     //auto focus
     private Handler mHandler = new Handler() {
@@ -76,7 +72,13 @@ public class CustomCamera extends AppCompatActivity implements View.OnClickListe
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             // here, Permission is not granted
-            ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.CAMERA}, 50);
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA}, 50);
+        }
+        // dynamic audio_record permission
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 10);
+
         }
         mTextureView = findViewById(R.id.textureView);
         bStart = findViewById(R.id.buttonStart);
@@ -84,6 +86,14 @@ public class CustomCamera extends AppCompatActivity implements View.OnClickListe
         cameraSwitch = findViewById(R.id.cameraSwitch);
         bStart.setOnClickListener(this);
         bStop.setOnClickListener(this);
+        backtoUserMenu = findViewById(R.id.backToUserMenu);
+        backtoUserMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CustomCameraActivity.this, UserMenuActivity.class);
+                startActivity(intent);
+            }
+        });
         initTextureViewListener(faceCamera);
         cameraSwitch.setOnClickListener(new View.OnClickListener() {
 
@@ -182,7 +192,7 @@ public class CustomCamera extends AppCompatActivity implements View.OnClickListe
 
     private void initCameraConfig() {
         android.hardware.Camera.Parameters parameters = mCamera.getParameters();
-        if(!faceCamera) {
+        if (!faceCamera) {
             parameters.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_OFF);//关闭闪光灯
             parameters.setFocusMode(android.hardware.Camera.Parameters.FLASH_MODE_AUTO); //对焦设置为自动
         }
@@ -199,10 +209,14 @@ public class CustomCamera extends AppCompatActivity implements View.OnClickListe
     }
 
     private void configMedioRecorder() {
+        int rotation = 0;
         long timeStamp = System.currentTimeMillis();
-        videoFile = new File(getExternalCacheDir(), timeStamp + "CameraRecorder.mp4");
-
+        String videoId = Long.toString(timeStamp);
+        videoFile = new File(getExternalCacheDir(), videoId+".mp4");
+        currentVideo =  new Video(videoId,"Question");
+        VideoInfoCollectionActivity.setCurrentVideo(currentVideo);
         mCamera.unlock();
+
         mMediaRecorder.setCamera(mCamera);
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);//设置音频源
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);//设置视频源
@@ -212,7 +226,8 @@ public class CustomCamera extends AppCompatActivity implements View.OnClickListe
         mMediaRecorder.setVideoSize(mSelectSize.width, mSelectSize.height);//设置视频分辨率
         mMediaRecorder.setVideoEncodingBitRate(8 * 1920 * 1080);//设置视频的比特率
         mMediaRecorder.setVideoFrameRate(30);//设置视频的帧率
-        mMediaRecorder.setOrientationHint(90);//设置视频的角度
+        rotation = faceCamera ? 270 : 90;
+        mMediaRecorder.setOrientationHint(rotation);//设置视频的角度
         mMediaRecorder.setMaxDuration(60 * 1000);//设置最大录制时间
         Surface surface = new Surface(mTextureView.getSurfaceTexture());
         mMediaRecorder.setPreviewDisplay(surface);//设置预览
@@ -284,7 +299,6 @@ public class CustomCamera extends AppCompatActivity implements View.OnClickListe
         if (isRecorder) {
             mMediaRecorder.stop();
             mMediaRecorder.reset();
-            isRecorder = false;
             try {
                 mCamera.setPreviewTexture(mTextureView.getSurfaceTexture());
                 mCamera.startPreview();
@@ -303,14 +317,15 @@ public class CustomCamera extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.buttonStop:
                 stopRecorder();
-                upLoadFireBase();
-                Intent intent = new Intent(this, MediaPlayerActivity.class);
-                startActivity(intent);
+                if(isRecorder){
+                    isRecorder = false;
+                    Intent intent = new Intent(this, VideoInfoCollectionActivity.class);
+                    startActivity(intent);
+                }
                 break;
             default:
                 break;
         }
-
     }
 
     @Override
@@ -331,28 +346,24 @@ public class CustomCamera extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void upLoadFireBase() {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        Uri file = Uri.fromFile(videoFile);
-        StorageReference videosRef = storageRef.child("videos/" + file.getLastPathSegment());
-        videosRef.putFile(file)
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                })
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                    }
-                });
-
-
-    }
-
-
-
+//    private void upLoadFireBase() {
+//        FirebaseStorage storage = FirebaseStorage.getInstance();
+//        StorageReference storageRef = storage.getReference();
+//        Uri file = Uri.fromFile(videoFile);
+//        StorageReference videosRef = storageRef.child("videos/" + file.getLastPathSegment());
+//        videosRef.putFile(file)
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//
+//                    }
+//                })
+//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//
+//                    }
+//                });
+//    }
+//
 }

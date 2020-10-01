@@ -1,16 +1,16 @@
 package com.cognidius.cofilms.database.Azure;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.StrictMode;
-import android.widget.Toast;
 
-import java.sql.Connection;
+import com.cognidius.cofilms.database.room.Video;
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AzureConnection {
     private static java.sql.Connection connection = null;
@@ -44,6 +44,8 @@ public class AzureConnection {
                 case "Userinfo":
                     insertStatement = connection.prepareStatement("insert into userinfo values(?,?,?,?,?,?,?)");
                     break;
+                case "Videoinfo":
+                    insertStatement = connection.prepareStatement("insert into videoinfo values(?,?,?,?,?)");
                 default:
 
             }
@@ -92,6 +94,24 @@ public class AzureConnection {
             return rst;
         }
         return rst;
+    }
+
+    public static List<Video> getVideoInfoFromUserName(String username){
+        List<Video> videos = new ArrayList<>();
+        String query = "select * from videoinfo where belongto = '" + username + "'";
+        ResultSet resultSet = execute(query);
+
+        try{
+            while(resultSet.next()){
+                Video currentVideo = new Video(resultSet.getString(1),resultSet.getString(3));
+                currentVideo.setVideoTitle(resultSet.getString(2));
+                videos.add(currentVideo);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return videos;
     }
 
     public static void disconnect() throws SQLException {
