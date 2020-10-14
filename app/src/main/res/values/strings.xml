@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">CoFilms</string>
+    <string name="wanna_see_answer">Wanna see answers?</string>
+    <string name="no_answer">Sorry, no answers for this question.</string>
+
+
+
+
 </resources>

@@ -10,26 +10,34 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.cognidius.cofilms.R;
+import com.cognidius.cofilms.activities.internal.UserMenuActivity;
 import com.cognidius.cofilms.database.Azure.AzureConnection;
+import com.cognidius.cofilms.database.room.InitialDataBase;
+import com.cognidius.cofilms.database.room.User;
 import com.cognidius.cofilms.database.room.Video;
+import com.cognidius.cofilms.database.room.dao.UserDao;
+import com.cognidius.cofilms.database.room.dao.VideoDao;
 
 
+import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.List;
 
 public class VideoInfoCollectionActivity extends AppCompatActivity implements View.OnClickListener {
     private static Video currentVideo;
     private EditText videoTitle;
-    private RadioGroup videoType;
+    // private RadioGroup videoType;
     private Button btnConfirm;
     private Button btnCancel;
-    private RadioButton checckedType;
-    private ProgressBar progressBar;
-
+   // private RadioButton checckedType;
+    //private ProgressBar progressBar;
+    VideoDao videoDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,23 +48,25 @@ public class VideoInfoCollectionActivity extends AppCompatActivity implements Vi
 
     private void initActivity(){
         videoTitle = findViewById(R.id.videoTitle);
-        videoType = findViewById(R.id.videoType);
+        //videoType = findViewById(R.id.videoType);
         btnConfirm = findViewById(R.id.btnConfirm);
         btnCancel = findViewById(R.id.btnCancel);
-        progressBar = findViewById(R.id.progressBar);
+        //progressBar = findViewById(R.id.progressBar);
         btnConfirm.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
-        videoType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                selectrb();
-            }
-
-            private void selectrb(){
-                checckedType = findViewById(videoType.getCheckedRadioButtonId());
-                currentVideo.setVideoType(checckedType.getText().toString());
-            }
-        });
+        videoDao = InitialDataBase.initialVideoTable(this);
+        //videoType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                selectrb();
+//            }
+//
+//            private void selectrb(){
+//                checckedType = findViewById(videoType.getCheckedRadioButtonId());
+//                currentVideo.setVideoType(checckedType.getText().toString());
+//            }
+//        });
+//
 
     }
 
@@ -85,19 +95,20 @@ public class VideoInfoCollectionActivity extends AppCompatActivity implements Vi
 //
 //    }
 
-    public void uploadVideoToAzure() {
-        PreparedStatement prepSt = AzureConnection.insert("Videoinfo");
-        try {
-            prepSt.setString(1, currentVideo.getVideoId());
-            prepSt.setString(2, currentVideo.getVideoTitle());
-            prepSt.setString(3, currentVideo.getVideoType());
-            prepSt.setString(4, currentVideo.getBelongTo());
-            prepSt.setNull(5, Types.VARCHAR);
-            ResultSet rs = prepSt.executeQuery();
-            System.out.println("Insert Video info successfully");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void uploadVideoInfo() {
+//        PreparedStatement prepSt = AzureConnection.insert("Videoinfo");
+//        try {
+//            prepSt.setString(1, currentVideo.getVideoId());
+//            prepSt.setString(2, currentVideo.getVideoTitle());
+//            prepSt.setString(3, currentVideo.getVideoType());
+//            prepSt.setString(4, currentVideo.getBelongTo());
+//            prepSt.setNull(5, Types.VARCHAR);
+//            ResultSet rs = prepSt.executeQuery();
+//            System.out.println("Insert Video info successfully");
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+        videoDao.insertAll(currentVideo);
     }
 
     public static void setCurrentVideo(Video video){
@@ -108,17 +119,28 @@ public class VideoInfoCollectionActivity extends AppCompatActivity implements Vi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnConfirm:
-//                currentVideo.setVideoTitle(videoTitle.getText().toString());
-//                currentVideo.setBelongTo(LoggedUser.getUSERNAME());
-                progressBar.setVisibility(ProgressBar.VISIBLE);
-                //uploadVideoToAzure();
+                currentVideo.setVideoTitle(videoTitle.getText().toString());
+                //progressBar.setVisibility(ProgressBar.VISIBLE);
+                uploadVideoInfo();
                 //uploadVideoToFirebase();
-
-
+                Toast.makeText(VideoInfoCollectionActivity.this,"Upload Successfully", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(VideoInfoCollectionActivity.this, UserMenuActivity.class);
+                startActivity(intent);
                 break;
             case R.id.btnCancel:
-                Intent intent = new Intent(VideoInfoCollectionActivity.this, CustomCameraActivity.class);
-                startActivity(intent);
+                Intent intentTwo = new Intent(VideoInfoCollectionActivity.this, CustomCameraActivity.class);
+                if(currentVideo.getVideoType().equals("question")){
+                    File videoFile = new File(getExternalCacheDir(),"/" + currentVideo.getVideoId() + "/Question.mp4");
+                    videoFile.delete();
+                    File path = new File(getExternalCacheDir(),"/" + currentVideo.getVideoId());
+                    path.delete();
+                }else{
+                    File videoFile = new File(getExternalCacheDir(), "/" + currentVideo.getParentId() + "/" + currentVideo.getVideoId() + ".mp4"  );
+                    videoFile.delete();
+                    intentTwo.putExtra("videoId",currentVideo.getParentId());
+                    intentTwo.putExtra("videoType",false);
+                }
+                startActivity(intentTwo);
                 break;
             default:
         }

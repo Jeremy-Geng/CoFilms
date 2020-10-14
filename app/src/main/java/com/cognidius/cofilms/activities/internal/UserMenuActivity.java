@@ -11,21 +11,31 @@ import android.widget.Button;
 
 import com.cognidius.cofilms.R;
 import com.cognidius.cofilms.activities.player.CustomCameraActivity;
+import com.cognidius.cofilms.database.LoggedUser;
+import com.cognidius.cofilms.database.room.InitialDataBase;
 import com.cognidius.cofilms.database.room.Video;
+import com.cognidius.cofilms.database.room.dao.VideoDao;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserMenuActivity extends AppCompatActivity {
     private Button gotoPublic;
     private RecyclerView videoList;
     private FloatingActionButton fabAddVideo;
+    private VideoDao videoDao;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_menu);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         initView();
     }
 
@@ -48,15 +58,12 @@ public class UserMenuActivity extends AppCompatActivity {
             }
         });
 
+        //Video testVideo = new Video("20201005","Tomt","question");
+        videoDao = InitialDataBase.initialVideoTable(this);
+        //videoDao.insertAll(testVideo);
+        List<Video> videos = videoDao.loadQuestionsRelatedToSpecificUser(LoggedUser.getUSERNAME(), "question");
         videoList = findViewById(R.id.videosRecView);
         VideoAdapter adapter = new VideoAdapter(this);
-        ArrayList<Video> videos = new ArrayList<>();
-        Video videoOne = new Video();
-        videoOne.setVideoTitle("TestingOne");
-        videos.add(videoOne);
-        Video videoTwo = new Video();
-        videoTwo.setVideoTitle("TestingTwo");
-        videos.add(videoTwo);
         adapter.setVideoList(videos);
         videoList.setAdapter(adapter);
         videoList.setLayoutManager(new GridLayoutManager(this,2));

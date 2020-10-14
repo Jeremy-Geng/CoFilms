@@ -30,8 +30,6 @@ public class User {
     @ColumnInfo(name = "birthOfDate" )
     public String birthOfDate;
 
-
-
     public User(@NonNull String userName, @NonNull String passWord) {
         this.userName = userName;
         this.passWord = passWord;
@@ -95,4 +93,16 @@ public class User {
         this.birthOfDate = birthOfDate;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "userName='" + userName + '\'' +
+                ", passWord='" + passWord + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", country='" + country + '\'' +
+                ", gender='" + gender + '\'' +
+                ", community='" + community + '\'' +
+                ", birthOfDate='" + birthOfDate + '\'' +
+                '}';
+    }
 }

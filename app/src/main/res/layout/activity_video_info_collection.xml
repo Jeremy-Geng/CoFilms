@@ -10,8 +10,8 @@
         android:id="@+id/btnConfirm"
         android:layout_width="69dp"
         android:layout_height="32dp"
-        android:layout_below="@id/videoType"
-        android:layout_alignLeft="@id/videoType"
+        android:layout_below="@id/videoTitle"
+        android:layout_alignLeft="@id/videoTitle"
         android:layout_marginLeft="3dp"
         android:layout_marginTop="0dp"
         android:text="Confirm"
@@ -21,7 +21,7 @@
         android:id="@+id/btnCancel"
         android:layout_width="69dp"
         android:layout_height="32dp"
-        android:layout_below="@id/videoType"
+        android:layout_below="@id/videoTitle"
         android:layout_toEndOf="@id/btnConfirm"
         android:layout_marginLeft="20dp"
         android:text="Cancel"
@@ -36,27 +36,27 @@
         android:layout_alignParentTop="true"
         android:hint="Please enter video title" />
 
-    <RadioGroup
-        android:id="@+id/videoType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/videoTitle"
-        android:layout_alignLeft="@id/videoTitle">
+<!--    <RadioGroup-->
+<!--        android:id="@+id/videoType"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@id/videoTitle"-->
+<!--        android:layout_alignLeft="@id/videoTitle">-->
 
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:id="@+id/rbQuestion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Question"
-            android:checked="true"/>
+<!--        <com.google.android.material.radiobutton.MaterialRadioButton-->
+<!--            android:id="@+id/rbQuestion"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Question"-->
+<!--            android:checked="true"/>-->
 
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:id="@+id/rbAnswer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Answer" />
+<!--        <com.google.android.material.radiobutton.MaterialRadioButton-->
+<!--            android:id="@+id/rbAnswer"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Answer" />-->
 
-    </RadioGroup>
+<!--    </RadioGroup>-->
 
     <ProgressBar
         android:id="@+id/progressBar"

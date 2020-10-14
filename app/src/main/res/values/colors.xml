@@ -7,4 +7,6 @@
     <color name="normal">#F4F4F4</color>
     <color name="press">#7A7373</color>
     <color name="pureBlack">#000000</color>
+    <color name="red">#F30707</color>
+
 </resources>

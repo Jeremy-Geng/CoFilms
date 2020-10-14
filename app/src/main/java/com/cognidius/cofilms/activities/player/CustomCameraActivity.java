@@ -8,12 +8,15 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -22,6 +25,7 @@ import android.widget.ImageView;
 
 import com.cognidius.cofilms.R;
 import com.cognidius.cofilms.activities.internal.UserMenuActivity;
+import com.cognidius.cofilms.database.LoggedUser;
 import com.cognidius.cofilms.database.room.Video;
 
 import java.io.File;
@@ -31,55 +35,50 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public class CustomCameraActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = CustomCameraActivity.class.getSimpleName();
+    private boolean isQuestion = true;
+    private String questionVideoId;
     private MediaRecorder mMediaRecorder;
     private TextureView mTextureView;
     private Button bStart, bStop;
     private android.hardware.Camera mCamera;
     private android.hardware.Camera.Size mSelectSize;
     private boolean isRecorder = false;
-    private File videoFile;
+    private String videoFile;
     private ImageView cameraSwitch;
     private boolean faceCamera = false;
     private ImageView backtoUserMenu;
     private Video currentVideo;
 
     //auto focus
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 0x01:
-                    mCamera.autoFocus(new android.hardware.Camera.AutoFocusCallback() { //auto focus
-                        @Override
-                        public void onAutoFocus(boolean success, android.hardware.Camera camera) {
-
-                        }
-                    });
-                    mHandler.sendEmptyMessageDelayed(0x01, 2 * 1000);// per 2s, auto focus repeatedly
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
+//    private Handler mHandler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//            switch (msg.what) {
+//                case 0x01:
+//                    mCamera.autoFocus(new android.hardware.Camera.AutoFocusCallback() { //auto focus
+//                        @Override
+//                        public void onAutoFocus(boolean success, android.hardware.Camera camera) {
+//
+//                        }
+//                    });
+//                    mHandler.sendEmptyMessageDelayed(0x01, 2 * 1000);// per 2s, auto focus repeatedly
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_domain);
-        // dynamic camera permission
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            // here, Permission is not granted
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA}, 50);
-        }
-        // dynamic audio_record permission
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+    }
 
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 10);
-
-        }
+    @Override
+    protected void onStart() {
+        super.onStart();
         mTextureView = findViewById(R.id.textureView);
         bStart = findViewById(R.id.buttonStart);
         bStop = findViewById(R.id.buttonStop);
@@ -87,6 +86,7 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
         bStart.setOnClickListener(this);
         bStop.setOnClickListener(this);
         backtoUserMenu = findViewById(R.id.backToUserMenu);
+
         backtoUserMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,7 +94,9 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
                 startActivity(intent);
             }
         });
+
         initTextureViewListener(faceCamera);
+
         cameraSwitch.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -107,7 +109,13 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
                 try {
                     mCamera.setPreviewTexture(mTextureView.getSurfaceTexture());
                     mCamera.startPreview();
-                    mHandler.sendEmptyMessageDelayed(0x01, 2 * 1000);
+                    mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                        @Override
+                        public void onAutoFocus(boolean success, Camera camera) {
+                            camera.cancelAutoFocus();
+                        }
+                    });
+                    // mHandler.sendEmptyMessageDelayed(0x01, 2 * 1000);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -116,6 +124,12 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
 
         initMediaRecorder();
 
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            questionVideoId = extras.getString("parentId");
+            String vt = extras.getString("videoType");
+            isQuestion = !vt.equals("answer");
+        }
     }
 
     private void initTextureViewListener(final boolean isFacing) {
@@ -137,7 +151,13 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
                 try {
                     mCamera.setPreviewTexture(surfaceTexture);
                     mCamera.startPreview();
-                    mHandler.sendEmptyMessageDelayed(0x01, 2 * 1000);
+                    //mHandler.sendEmptyMessageDelayed(0x01, 2 * 1000);
+                    mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                        @Override
+                        public void onAutoFocus(boolean success, Camera camera) {
+                            camera.cancelAutoFocus();
+                        }
+                    });
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -211,27 +231,50 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
     private void configMedioRecorder() {
         int rotation = 0;
         long timeStamp = System.currentTimeMillis();
-        String videoId = Long.toString(timeStamp);
-        videoFile = new File(getExternalCacheDir(), videoId+".mp4");
-        currentVideo =  new Video(videoId,"Question");
-        VideoInfoCollectionActivity.setCurrentVideo(currentVideo);
-        mCamera.unlock();
+        String thisVideoId = Long.toString(timeStamp);
+        String videoType = "question";
+        if(isQuestion){
+            //videoFile = new File(getExternalCacheDir(),"/" + thisVideoId + "/Question.mp4");
+            String path = getExternalCacheDir().getAbsolutePath() + "/" + thisVideoId+ "/";
+            File dir = new File(path);
+            if(!dir.exists()) dir.mkdirs();
+            videoFile = path +  "Question.mp4";
+            //videoFile = new File(file, thisVideoId+".mp4");
+            currentVideo =  new Video(thisVideoId, LoggedUser.getUSERNAME(), videoType);
+        }else{
+            //videoFile = new File(getExternalCacheDir(), "/" + questionVideoId + "/" + thisVideoId + ".mp4"  );
+            //videoFile = new File(getExternalCacheDir(), thisVideoId+".mp4");
+            String path = getExternalCacheDir().getAbsolutePath() + "/" + questionVideoId + "/";
+            File dir = new File(path);
+            if(!dir.exists()) dir.mkdirs();
+            videoFile = path + thisVideoId + ".mp4";
+            videoType = "answer";
+            currentVideo =  new Video(thisVideoId, LoggedUser.getUSERNAME(), videoType);
+            currentVideo.setParentId(questionVideoId);
+        }
 
+        VideoInfoCollectionActivity.setCurrentVideo(currentVideo);
+
+        mCamera.unlock();
         mMediaRecorder.setCamera(mCamera);
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);//设置音频源
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);//设置视频源
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);//设置音频输出格式
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);//设置音频编码格式
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);//设置视频编码格式
+
+        // comment for some devices
         mMediaRecorder.setVideoSize(mSelectSize.width, mSelectSize.height);//设置视频分辨率
         mMediaRecorder.setVideoEncodingBitRate(8 * 1920 * 1080);//设置视频的比特率
+
+        //comment for some devices
         mMediaRecorder.setVideoFrameRate(30);//设置视频的帧率
         rotation = faceCamera ? 270 : 90;
         mMediaRecorder.setOrientationHint(rotation);//设置视频的角度
         mMediaRecorder.setMaxDuration(60 * 1000);//设置最大录制时间
         Surface surface = new Surface(mTextureView.getSurfaceTexture());
         mMediaRecorder.setPreviewDisplay(surface);//设置预览
-        mMediaRecorder.setOutputFile(videoFile.getAbsolutePath());//设置文件保存路径
+        mMediaRecorder.setOutputFile(videoFile);//设置文件保存路径
         mMediaRecorder.setOnErrorListener(new MediaRecorder.OnErrorListener() { //录制异常监听
             @Override
             public void onError(MediaRecorder mr, int what, int extra) {
@@ -346,7 +389,7 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-//    private void upLoadFireBase() {
+    //    private void upLoadFireBase() {
 //        FirebaseStorage storage = FirebaseStorage.getInstance();
 //        StorageReference storageRef = storage.getReference();
 //        Uri file = Uri.fromFile(videoFile);
@@ -366,4 +409,21 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
 //                });
 //    }
 //
+
+
+    private boolean isPreviewActive=true;//preview是否是活动的。防止preview是inactive时去调用对焦产生异常。
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if(isPreviewActive) {//preview活动时才能调用自动对焦功能
+            //对焦
+            mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                @Override
+                public void onAutoFocus(boolean success, Camera camera) {
+                    camera.cancelAutoFocus();
+                }
+            });
+        }
+        return super.onTouchEvent(event);
+    }
 }

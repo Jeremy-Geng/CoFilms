@@ -96,26 +96,26 @@ public class AzureConnection {
         return rst;
     }
 
-    public static List<Video> getVideoInfoFromUserName(String username){
-        List<Video> videos = new ArrayList<>();
-        String query = "select * from videoinfo where belongto = '" + username + "'";
-        ResultSet resultSet = execute(query);
-
-        try{
-            while(resultSet.next()){
-                Video currentVideo = new Video(resultSet.getString(1),resultSet.getString(3));
-                currentVideo.setVideoTitle(resultSet.getString(2));
-                videos.add(currentVideo);
-            }
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-
-        return videos;
-    }
-
-    public static void disconnect() throws SQLException {
-        connection.close();
-    }
+//    public static List<Video> getVideoInfoFromUserName(String username){
+////        List<Video> videos = new ArrayList<>();
+////        String query = "select * from videoinfo where belongto = '" + username + "'";
+////        ResultSet resultSet = execute(query);
+////
+////        try{
+////            while(resultSet.next()){
+////                Video currentVideo = new Video(resultSet.getString(1),resultSet.getString(3));
+////                currentVideo.setVideoTitle(resultSet.getString(2));
+////                videos.add(currentVideo);
+////            }
+////        }catch (SQLException e){
+////            e.printStackTrace();
+////        }
+////
+////        return videos;
+////    }
+////
+////    public static void disconnect() throws SQLException {
+////        connection.close();
+////    }
 
 }

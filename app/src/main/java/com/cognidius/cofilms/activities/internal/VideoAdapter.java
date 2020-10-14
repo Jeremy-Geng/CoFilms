@@ -1,6 +1,7 @@
 package com.cognidius.cofilms.activities.internal;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +17,18 @@ import com.cognidius.cofilms.R;
 import com.cognidius.cofilms.activities.player.MediaPlayerActivity;
 import com.cognidius.cofilms.database.room.Video;
 
+import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
     private List<Video> videoList;
     private Context context;
+    private ContextWrapper cw;
 
     public VideoAdapter(Context context) {
         this.context = context;
+        cw = new ContextWrapper(context);
     }
 
     public void setVideoList(List<Video> videos){
@@ -46,10 +51,21 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             @Override
             public void onClick(View v) {
                 MediaPlayerActivity.setCurrentVideo(videoList.get(position));
+                //MediaPlayerActivity.setPreProcess(true);
                 Intent intent = new Intent(context, MediaPlayerActivity.class);
                 context.startActivity(intent);
             }
         });
+
+        File parentPath = new File(cw.getExternalCacheDir(),"/" + videoList.get(position).getVideoId());
+        File[] answers = parentPath.listFiles();
+        if(answers.length > 1){
+            holder.isAnswered.setText("Answered");
+            holder.isAnswered.setTextColor(cw.getResources().getColor(R.color.red) );
+        }
+
+
+
 
 //        Glide.with(context)
 //                .asBitmap()
@@ -65,7 +81,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     public class VideoViewHolder extends RecyclerView.ViewHolder {
         private CardView parent;
-        private TextView videoTitle;
+        private TextView videoTitle, isAnswered;
         private ImageView videoThumbnail;
 
 
@@ -73,7 +89,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             super(itemView);
             parent = itemView.findViewById(R.id.user_parent);
             videoTitle = itemView.findViewById(R.id.videoTitle);
+            isAnswered = itemView.findViewById(R.id.isAnswered);
             videoThumbnail = itemView.findViewById(R.id.thumbNailImage);
+
 
         }
     }

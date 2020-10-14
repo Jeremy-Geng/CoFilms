@@ -2,9 +2,13 @@ package com.cognidius.cofilms.activities.external;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -34,6 +38,7 @@ import com.cognidius.cofilms.database.room.dao.UserDao;
 
 
 import java.sql.SQLOutput;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,7 +58,40 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //AzureConnection.connect();
        // AzureConnection.getUsernameList();
-        initView();
+        // dynamic camera permission
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//            // here, Permission is not granted
+//            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA}, 50);
+//        }
+//
+//        // dynamic audio_record permission
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+//
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 10);
+//
+//        }
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            List<String> permissionList = new ArrayList<>();
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.
+                    permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(Manifest.permission.CAMERA);
+            }
+            if (ContextCompat.checkSelfPermission(this, Manifest.
+                    permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(Manifest.permission.RECORD_AUDIO);
+            }
+            if (!permissionList.isEmpty()) {
+                String[] permissions = permissionList.toArray(new String[permissionList.size()]);
+                ActivityCompat.requestPermissions(this, permissions, 1);
+            } else {
+
+            }
+        }
+
+
+            initView();
     }
 
 
@@ -61,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         logIn = findViewById(R.id.logIn);
         userName = findViewById(R.id.Username);
         password = findViewById(R.id.Password);
+
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,8 +138,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Create a default user for testing convenience
+        User defaultUser = new User("Tomt","1234");
         userDao = InitialDataBase.initialUserTable(this);
         users = userDao.loadAllUsers();
+        if(users.size() == 0) {
+            userDao.insertAll(defaultUser);
+            users = userDao.loadAllUsers();
+        }
+        System.out.println("----Users:" + users);
 
     }
 

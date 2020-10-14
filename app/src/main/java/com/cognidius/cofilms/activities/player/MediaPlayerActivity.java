@@ -1,15 +1,16 @@
 package com.cognidius.cofilms.activities.player;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.VideoView;
 
 import com.cognidius.cofilms.R;
 import com.cognidius.cofilms.activities.internal.UserMenuActivity;
@@ -18,28 +19,34 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 import java.io.File;
-import java.io.IOException;
 
 public class MediaPlayerActivity extends AppCompatActivity implements View.OnClickListener {
-    private SurfaceView mSurfaceView;
-    private MediaPlayer mediaPlayer;
-    private FloatingActionButton btnStartAndStop;
-    private String path;
-    private boolean isInitFinish = false;
-    private SurfaceHolder mSurfaceHolder;
+    private FloatingActionButton btnStartAndStop, backTo, addOneAnswer;
     private ProgressBar progressBar;
+    private VideoView videoView;
     private static Video currentVideo;
-    private String url;
-    private ImageView backToUserMenu;
+    private static boolean preProcess = false;
+    private boolean isPrepared;
+    private boolean isPlaying;
+    private int numOfAnswers;
+    private File[] answers;
+    private int cursor;
+    private AlertDialog.Builder playAnswerBuilder;
+    private AlertDialog.Builder noAnswerBuilder;
+    AlertDialog playAnswer ;
+    AlertDialog noAnswer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_player);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         initActivity();
-        initMediaPlayer();
-        initSurfaceviewStateListener();
 
     }
 
@@ -49,21 +56,117 @@ public class MediaPlayerActivity extends AppCompatActivity implements View.OnCli
 
     //Initialize this activity
     private void initActivity() {
-        mSurfaceView = findViewById(R.id.surfaceView);
         btnStartAndStop = findViewById(R.id.fabControl);
+        backTo = findViewById(R.id.fabBackTo);
+        addOneAnswer = findViewById(R.id.fabAddAnswer);
         progressBar = findViewById(R.id.progressBar);
-        backToUserMenu = findViewById(R.id.backToUserMenuforPlayer);
-        backToUserMenu.setOnClickListener(new View.OnClickListener() {
+        videoView = findViewById(R.id.videoView);
+        isPrepared = false;
+        isPlaying = false;
+        playAnswerBuilder = new AlertDialog.Builder(this);
+        noAnswerBuilder = new AlertDialog.Builder(this);
+        cursor = 1;
+
+        if(preProcess){
+            videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.test_question));
+            preProcess = false;
+        }else{
+            File videoFile = new File(getExternalCacheDir(),"/" + currentVideo.getVideoId() + "/Question.mp4");
+            videoView.setVideoPath(videoFile.getAbsolutePath());
+            File path = new File(getExternalCacheDir(),"/" + currentVideo.getVideoId());
+            answers = path.listFiles();
+            System.out.println("-------" + answers[0].getName());
+            numOfAnswers = answers.length;
+        }
+
+        // Set two dialogs
+        playAnswerBuilder.setMessage(R.string.wanna_see_answer)
+                  .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                      @Override
+                      public void onClick(DialogInterface dialog, int which) {
+                          videoView.setVideoPath(answers[cursor].getAbsolutePath());
+                          videoView.start();
+                          isPlaying = true;
+                          cursor++;
+                      }
+                  })
+                  .setNegativeButton("Not now", new DialogInterface.OnClickListener() {
+                      @Override
+                      public void onClick(DialogInterface dialog, int which) {
+                          videoView.start();
+                          isPlaying = true;
+                      }
+                  });
+
+        noAnswerBuilder.setMessage(R.string.no_answer)
+                .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        videoView.start();
+                        isPlaying = true;
+                    }
+                });
+
+        playAnswer = playAnswerBuilder.create();
+        noAnswer = noAnswerBuilder.create();
+
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MediaPlayerActivity.this, UserMenuActivity.class);
-                startActivity(intent);
+            public void onPrepared(MediaPlayer mp) {
+                mp.start();
+                isPrepared = true;
+                isPlaying = true;
+                progressBar.setVisibility(ProgressBar.INVISIBLE);
             }
         });
+
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                if(numOfAnswers == 1 || cursor == numOfAnswers){
+                    noAnswer.show();
+                }else{
+                    playAnswer.show();
+                }
+            }
+        });
+
         btnStartAndStop.setOnClickListener(this);
-        File file = new File(getExternalCacheDir(), "CameraRecorder.mp4");
-        path = file.getAbsolutePath();
-        System.out.println("视频地址：" + path.toString());
+        backTo.setOnClickListener(this);
+        addOneAnswer.setOnClickListener(this);
+
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fabControl:
+                if(isPrepared){
+                    if(isPlaying){
+                        videoView.pause();
+                        isPlaying = false;
+                    }else{
+                        videoView.start();
+                        isPlaying = true;
+                    }
+                }
+                break;
+            case R.id.fabBackTo:
+                Intent intent = new Intent(MediaPlayerActivity.this, UserMenuActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.fabAddAnswer:
+                Intent intentTwo = new Intent(MediaPlayerActivity.this, CustomCameraActivity.class);
+                String parentId = currentVideo.getParentId() == null ? currentVideo.getVideoId() : currentVideo.getParentId();
+                intentTwo.putExtra("parentId", parentId);
+                intentTwo.putExtra("videoType","answer");
+                startActivity(intentTwo);
+                break;
+            default:
+
+
+        }
 
     }
 
@@ -72,103 +175,7 @@ public class MediaPlayerActivity extends AppCompatActivity implements View.OnCli
         super.onPause();
     }
 
-    private void initMediaPlayer() {
-        mediaPlayer = new MediaPlayer();
-    }
-
-    private void setMediaPlayer(String path)  {
-        try {
-//            FirebaseStorage storage = FirebaseStorage.getInstance();
-//            StorageReference storageRef = storage.getReference();
-//            String serverPath = "videos/"+ currentVideo.getVideoId() + ".mp4";
-//
-//            storageRef.child(serverPath).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                @Override
-//                public void onSuccess(Uri uri){
-//                    url = uri.toString();
-//                    System.out.println("Setting successfully: " + url);
-//                }
-//            });
-
-            mediaPlayer.setDataSource("https://firebasestorage.googleapis.com/v0/b/cofims.appspot.com/o/videos%2F1600843386183.mp4?alt=media&token=829fd2fb-a3d9-4cb9-9f7d-1613659b286c");
-            mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
-            mediaPlayer.setLooping(true);
-            System.out.println("设置路径及同步成功");
-            mediaPlayer.prepareAsync();
-
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    isInitFinish = true;
-                    progressBar.setVisibility(ProgressBar.INVISIBLE);
-                    startPlay();
-                }
-            });
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void startPlay() {
-        if (!mediaPlayer.isPlaying() && isInitFinish) {
-            mediaPlayer.start();
-        }
-    }
-
-    private void pausePlay() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-        }
-    }
-
-    private void seekTo(int time) {
-        mediaPlayer.seekTo(time);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if(mediaPlayer.isPlaying()){
-            pausePlay();
-        }else{
-            startPlay();
-        }
-
-    }
-
-    public void initSurfaceviewStateListener() {
-        mSurfaceHolder = mSurfaceView.getHolder();
-        mSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                mediaPlayer.setDisplay(holder);
-                setMediaPlayer(path);
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-
-            }
-        });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        if (mediaPlayer != null) {
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.stop();
-            }
-
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
+    public static void setPreProcess(boolean preProcess) {
+        MediaPlayerActivity.preProcess = preProcess;
     }
 }
