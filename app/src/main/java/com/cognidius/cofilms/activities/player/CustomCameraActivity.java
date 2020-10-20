@@ -264,11 +264,11 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);//设置视频编码格式
 
         // comment for some devices
-        mMediaRecorder.setVideoSize(mSelectSize.width, mSelectSize.height);//设置视频分辨率
+        //mMediaRecorder.setVideoSize(mSelectSize.width, mSelectSize.height);//设置视频分辨率
         mMediaRecorder.setVideoEncodingBitRate(8 * 1920 * 1080);//设置视频的比特率
 
         //comment for some devices
-        mMediaRecorder.setVideoFrameRate(30);//设置视频的帧率
+        //mMediaRecorder.setVideoFrameRate(30);//设置视频的帧率
         rotation = faceCamera ? 270 : 90;
         mMediaRecorder.setOrientationHint(rotation);//设置视频的角度
         mMediaRecorder.setMaxDuration(60 * 1000);//设置最大录制时间

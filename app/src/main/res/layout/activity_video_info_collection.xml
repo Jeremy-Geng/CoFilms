@@ -4,39 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E6CECE"
     tools:context=".activities.player.VideoInfoCollectionActivity">
 
-    <Button
-        android:id="@+id/btnConfirm"
-        android:layout_width="69dp"
-        android:layout_height="32dp"
-        android:layout_below="@id/videoTitle"
-        android:layout_alignLeft="@id/videoTitle"
-        android:layout_marginLeft="3dp"
-        android:layout_marginTop="0dp"
-        android:text="Confirm"
-        android:textSize="8dp" />
-
-    <Button
-        android:id="@+id/btnCancel"
-        android:layout_width="69dp"
-        android:layout_height="32dp"
-        android:layout_below="@id/videoTitle"
-        android:layout_toEndOf="@id/btnConfirm"
-        android:layout_marginLeft="20dp"
-        android:text="Cancel"
-        android:textSize="8dp" />
-
-    <EditText
-        android:id="@+id/videoTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_alignParentTop="true"
-        android:hint="Please enter video title" />
-
-<!--    <RadioGroup-->
+    <!--    <RadioGroup-->
 <!--        android:id="@+id/videoType"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->
@@ -58,6 +29,63 @@
 
 <!--    </RadioGroup>-->
 
+
+    <Button
+        android:id="@+id/btnConfirm"
+        android:layout_width="69dp"
+        android:layout_height="32dp"
+        android:layout_below="@id/videoTitle"
+        android:layout_alignLeft="@id/videoTitle"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="393dp"
+        android:text="Confirm"
+        android:textSize="8dp" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="69dp"
+        android:layout_height="32dp"
+        android:layout_below="@id/videoTitle"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="393dp"
+        android:layout_toEndOf="@id/btnConfirm"
+        android:text="Cancel"
+        android:textSize="8dp" />
+
+    <EditText
+        android:id="@+id/videoTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="100dp"
+        android:hint="Please enter video title" />
+
+    <EditText
+        android:id="@+id/mentionOtherUsers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="291dp"
+        android:layout_marginEnd="53dp"
+        android:hint="Wanna mention other users?" />
+
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="224dp"
+        android:layout_marginEnd="50dp"
+        android:hint="Please enter basic decription" />
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
@@ -65,6 +93,16 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/thumbNailImage"
+        android:layout_width="115dp"
+        android:layout_height="101dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="173dp"
+        android:layout_marginBottom="536dp"
+        android:src="@drawable/image_search_selector" />
 
 
 </RelativeLayout>

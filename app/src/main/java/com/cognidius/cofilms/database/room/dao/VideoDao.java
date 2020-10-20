@@ -21,4 +21,9 @@ public interface VideoDao {
     @Query("select * from video where belongTo = :userName and videoType = :videoType")
     List<Video> loadQuestionsRelatedToSpecificUser(String userName, String videoType);
 
+    @Query("select * from video where videoType = :videoType")
+    List<Video> loadAllQuestions(String videoType);
+
+
+
 }
