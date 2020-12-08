@@ -213,15 +213,15 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
     private void initCameraConfig() {
         android.hardware.Camera.Parameters parameters = mCamera.getParameters();
         if (!faceCamera) {
-            parameters.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_OFF);//关闭闪光灯
-            parameters.setFocusMode(android.hardware.Camera.Parameters.FLASH_MODE_AUTO); //对焦设置为自动
+            parameters.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_OFF);// Turn off the flash
+            parameters.setFocusMode(android.hardware.Camera.Parameters.FLASH_MODE_AUTO); // Focus is set to automatic
         }
-        parameters.setPreviewSize(mSelectSize.width, mSelectSize.height);//设置预览尺寸
-        parameters.setPictureSize(mSelectSize.width, mSelectSize.height);//设置图片尺寸  就拿预览尺寸作为图片尺寸,其实他们基本上是一样的
-        parameters.set("orientation", "portrait");//相片方向
-        parameters.set("rotation", 90); //相片镜头角度转90度（默认摄像头是横拍）
-        mCamera.setParameters(parameters);//添加参数
-        mCamera.setDisplayOrientation(90);//设置显示方向
+        parameters.setPreviewSize(mSelectSize.width, mSelectSize.height);// Set preview size
+        parameters.setPictureSize(mSelectSize.width, mSelectSize.height);// Set image size
+        parameters.set("orientation", "portrait");// Set photo orientation
+        parameters.set("rotation", 90); // Rotate the photo lens angle by 90 degrees
+        mCamera.setParameters(parameters);// Add parameters
+        mCamera.setDisplayOrientation(90);// Set display direction
     }
 
     private void initMediaRecorder() {
@@ -257,24 +257,24 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
 
         mCamera.unlock();
         mMediaRecorder.setCamera(mCamera);
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);//设置音频源
-        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);//设置视频源
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);//设置音频输出格式
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);//设置音频编码格式
-        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);//设置视频编码格式
+        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);// Set audio source
+        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);// Set video source
+        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);// Set audio output format
+        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);// Set audio encoding format
+        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);// Set video encoding format
 
         // comment for some devices
-        //mMediaRecorder.setVideoSize(mSelectSize.width, mSelectSize.height);//设置视频分辨率
-        mMediaRecorder.setVideoEncodingBitRate(8 * 1920 * 1080);//设置视频的比特率
+        //mMediaRecorder.setVideoSize(mSelectSize.width, mSelectSize.height);// Set video resolution
+        mMediaRecorder.setVideoEncodingBitRate(8 * 1920 * 1080);// Set the bit rate of the video
 
         //comment for some devices
-        //mMediaRecorder.setVideoFrameRate(30);//设置视频的帧率
+        //mMediaRecorder.setVideoFrameRate(30);// Set the frame rate of the video
         rotation = faceCamera ? 270 : 90;
-        mMediaRecorder.setOrientationHint(rotation);//设置视频的角度
-        mMediaRecorder.setMaxDuration(60 * 1000);//设置最大录制时间
+        mMediaRecorder.setOrientationHint(rotation);// Set the angle of the video
+        mMediaRecorder.setMaxDuration(60 * 1000);// Set maximum recording time
         Surface surface = new Surface(mTextureView.getSurfaceTexture());
-        mMediaRecorder.setPreviewDisplay(surface);//设置预览
-        mMediaRecorder.setOutputFile(videoFile);//设置文件保存路径
+        mMediaRecorder.setPreviewDisplay(surface);// Set preview
+        mMediaRecorder.setOutputFile(videoFile);// Set file save path
         mMediaRecorder.setOnErrorListener(new MediaRecorder.OnErrorListener() { //录制异常监听
             @Override
             public void onError(MediaRecorder mr, int what, int extra) {
@@ -411,12 +411,12 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
 //
 
 
-    private boolean isPreviewActive=true;//preview是否是活动的。防止preview是inactive时去调用对焦产生异常。
+    private boolean isPreviewActive=true;// Whether preview is active. Prevent abnormalities when calling focus when preview is inactive.
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(isPreviewActive) {//preview活动时才能调用自动对焦功能
-            //对焦
+        if(isPreviewActive) {// Auto focus function can only be called when preview is active
+            // focus
             mCamera.autoFocus(new Camera.AutoFocusCallback() {
                 @Override
                 public void onAutoFocus(boolean success, Camera camera) {
